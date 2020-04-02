@@ -7,12 +7,27 @@ class Quizz extends Component{
 
     constructor(props){
         super(props);
-        this.state = {images:[]}
+        this.state = {data:[]}
     }
 
     componentDidMount() {
+
+        // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+        // headers.append('Access-Control-Allow-Credentials', 'true');
+
+        fetch('https://raw.githubusercontent.com/fernandocomet/googleearthgame/master/geg/src/data/images.json')
+          .then(response => response.json())
+          .then(data => this.setState({ data }));
+      }
+
+    /* componentDidMount() {
         console.log("componentDidMount");
-    
+        
+        //https://github.com/fernandocomet/googleearthgame/blob/master/geg/src/data/images.json
+        https://raw.githubusercontent.com/fernandocomet/googleearthgame/master/geg/src/data/images.json
+        https://www.fernandocomet.com/data/images.json
+        https://raw.githubusercontent.com/ironhack-labs/lab-react-ironcontacts/master/starter-code/src/contacts.json
+
         axios
           .get("./data/images.json")
           .then(images => {
@@ -21,7 +36,7 @@ class Quizz extends Component{
               images: images.data
             });
           });
-    }
+    } */
 
     render(){
         return(
@@ -37,8 +52,8 @@ class Quizz extends Component{
                          </div>
                 })} /> */}
                 <ul>
-                    {this.state.images.map((item, idx) => (
-                        <li key={idx}>{item.country} {item.ImageURL} {item.id}</li>
+                    {this.state.data.map((item, idx) => (
+                        <li key={idx}>{item.Country} {item.ImageURL} {item.id}</li>
                     ))}
                 </ul>
             </div>
