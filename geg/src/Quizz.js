@@ -15,29 +15,44 @@ class Quizz extends Component{
             itemChosen : {Country:'', Region:'', ImageURL:'', GoogleMapsURL:'', id:''},
             imageChosen : "",
             countryChosen : "",
+            idChosen: "",
             score: 0,
             numPlays: 10 
         }
-        this.randomItem = this.randomItem.bind(this);
+        this.randomizeItem = this.randomizeItem.bind(this);
     }
 
     componentDidMount() {
         fetch('https://raw.githubusercontent.com/fernandocomet/googleearthgame/master/geg/src/data/images.json')
           .then(response => response.json())
-          .then(data => this.setState({ data }));
+          .then(data => this.setState({ data }))
+          .then(this.randomizeItem)
     }
 
-    randomItem(){
+/*  axios
+    .get(
+      "https://raw.githubusercontent.com/ironhack-labs/lab-react-ironcontacts/master/starter-code/src/contacts.json"
+    )
+    .then(actors => {
+      this.setState({
+        ...this.state,
+        actors: actors.data
+      });
+    }); */
+
+    randomizeItem(){
         console.log('RandomItem');
         let randomItem = Math.floor(Math.random()*this.state.data.length);
         let randomImage = this.state.data[randomItem].ImageURL;
         let randomCountry = this.state.data[randomItem].Country;
+        let randomId = this.state.data[randomItem].id;
 
         console.log(`randomImage `, randomImage);
         this.setState({
             itemChosen: randomItem,
             imageChosen: randomImage,
-            countryChosen: randomCountry
+            countryChosen: randomCountry,
+            idChosen : randomId 
             /*,
             imageChosen: this.state.itemChosen.ImageURL,
             countryChosen: this.state.itemChosen.Country*/
@@ -62,11 +77,16 @@ class Quizz extends Component{
 
 
     render(){
+        //{const imgPath = this.state.imageChosen} 
         return(
             <div>
                 <h1>Quizz</h1>
-                <Bigphoto />
-                <button onClick={this.randomItem}>NEXT</button>
+                     {/* <Image source={{uri : myImage, cache: 'reload'}} /> */}
+                <Bigphoto imageChosen={this.state.imageChosen} key={this.state.idChosen}/>
+                <div>
+                    <img src='{this.state.imageChosen}' alt="image"/>
+                </div>
+                <button onClick={this.randomizeItem}>NEXT</button>
                 <ul>
                     {this.state.data.map((item, idx) => (
                         <li key={idx}>{item.Country} {item.ImageURL} {item.id}</li>
