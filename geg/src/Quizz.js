@@ -1,56 +1,72 @@
 import React, { Component } from 'react';
 import Bigphoto from './Bigphoto';
 //import PostData from './data/images.json';
-import axios from "axios";
+//import axios from "axios";
 
 class Quizz extends Component{
 
     constructor(props){
         super(props);
-        this.state = {data:[]}
+        this.state = 
+        {
+            data:[],
+            chosenItems:[],
+            countries: new Set(),
+            itemChosen : {Country:'', Region:'', ImageURL:'', GoogleMapsURL:'', id:''},
+            imageChosen : "",
+            countryChosen : "",
+            score: 0,
+            numPlays: 10 
+        }
+        this.randomItem = this.randomItem.bind(this);
     }
 
     componentDidMount() {
-
-        // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-        // headers.append('Access-Control-Allow-Credentials', 'true');
-
         fetch('https://raw.githubusercontent.com/fernandocomet/googleearthgame/master/geg/src/data/images.json')
           .then(response => response.json())
           .then(data => this.setState({ data }));
-      }
+    }
 
-    /* componentDidMount() {
-        console.log("componentDidMount");
-        
-        //https://github.com/fernandocomet/googleearthgame/blob/master/geg/src/data/images.json
-        https://raw.githubusercontent.com/fernandocomet/googleearthgame/master/geg/src/data/images.json
-        https://www.fernandocomet.com/data/images.json
-        https://raw.githubusercontent.com/ironhack-labs/lab-react-ironcontacts/master/starter-code/src/contacts.json
+    randomItem(){
+        console.log('RandomItem');
+        let randomItem = Math.floor(Math.random()*this.state.data.length);
+        let randomImage = this.state.data[randomItem].ImageURL;
+        let randomCountry = this.state.data[randomItem].Country;
 
-        axios
-          .get("./data/images.json")
-          .then(images => {
-            this.setState({
-              ...this.state,
-              images: images.data
-            });
-          });
-    } */
+        console.log(`randomImage `, randomImage);
+        this.setState({
+            itemChosen: randomItem,
+            imageChosen: randomImage,
+            countryChosen: randomCountry
+            /*,
+            imageChosen: this.state.itemChosen.ImageURL,
+            countryChosen: this.state.itemChosen.Country*/
+        });
+
+    }
+
+    /*TO DO
+    - Random item - Load initial photo default random
+    - Pass Random image
+    - Show random photo
+    - Push id to ChosenItems Array
+
+    - Push Countries to countries Set
+    - Select randomly three rando items different from itemChosen country
+
+    - Show countries (4) randomly sorted
+    - onClick -> CheckCountry, Score
+
+    - Button begin / next /playagain
+    */
+
 
     render(){
         return(
             <div>
                 <h1>Quizz</h1>
                 <Bigphoto />
-                {/* <{PostData.map((item, idx) => {
-                  return <div>
-                            <h1>Item</h1>
-                            <p>{item.Country}</p>
-                            <p>{item.ImageURL}</p>
-                            <p>{item.ID}</p>
-                         </div>
-                })} /> */}
+                <button onClick={this.randomItem}>NEXT</button>
                 <ul>
                     {this.state.data.map((item, idx) => (
                         <li key={idx}>{item.Country} {item.ImageURL} {item.id}</li>
@@ -63,21 +79,94 @@ class Quizz extends Component{
 
 export default Quizz;
 
-// {"Country":"Australia","Region":"-","ImageURL":"www.gstatic.com/prettyearth/assets/full/1003.jpg","GoogleMapsURL":"www.google.com/maps/@-10.040181,143.560709,12z/data=!3m1!1e3","ID":1003},
+// {"Country":"Australia","Region":"-","ImageURL":"www.gstatic.com/prettyearth/assets/full/1003.jpg","GoogleMapsURL":"www.google.com/maps/@-10.040181,143.560709,12z/data=!3m1!1e3","id":1003},
+/*
 
-{/* <div >
-        <h1>Hello There</h1>
-        {postList.map((item, index) => {
-          return <PostDetail
-            post={item}
-            key={`post-list-key ${index}`}
-            didHandleRemove={this.handlePostRemove}
-            dataCallback={this.handleDataCallback} />
-        })}
-</div>
+{ <{PostData.map((item, idx) => {
+                  return <div>
+                            <h1>Item</h1>
+                            <p>{item.Country}</p>
+                            <p>{item.ImageURL}</p>
+                            <p>{item.ID}</p>
+                         </div>
+                })} /> }
 
-                <div className="container">
-                    {this.state.boxesArr.map((n, idx) => (
-                        <Colorbox key={idx}/>
-                    ))}
-                 </div> */}
+generateNewColor(){
+    const colorsNew = [...this.props.colors];
+    const index = colorsNew.indexOf(this.state.color);
+    if(index > -1){colorsNew.splice(index, 1)}
+    
+    const randomColor = colorsNew[Math.floor(Math.random()*colorsNew.length)];
+    this.setState({color:randomColor})
+}
+
+genRandom(){
+    let randdomValues = [];
+    while(randdomValues.length < 6){
+        let r = Math.floor(Math.random() * 40) + 1;
+        if(randdomValues.indexOf(r) === -1) randdomValues.push(r);
+    }
+    this.setState(currrentState => ({ nums: [...randdomValues] }))
+    console.log(randdomValues);
+}
+
+constructor(props) {
+    super(props);
+    this.state = { nums: Array.from({ length: this.props.numBalls }) };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  generate() {
+    this.setState(curState => ({
+      nums: curState.nums.map(
+        n => Math.floor(Math.random() * this.props.maxNum) + 1
+      )
+    }));
+  }
+
+constructor(props) {
+    super(props);
+    this.state = { nWrong: 0, guessed: new Set(), answer: randomWord() };
+    this.handleGuess = this.handleGuess.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+  reset() {
+    this.setState({
+      nWrong: 0,
+      guessed: new Set(),
+      answer: randomWord()
+    });
+  }
+
+ guessedWord() {
+    return this.state.answer
+      .split("")
+      .map(ltr => (this.state.guessed.has(ltr) ? ltr : "_"));
+  }
+  handleGuess(evt) {
+    let ltr = evt.target.value;
+    this.setState(st => ({
+      guessed: st.guessed.add(ltr),
+      nWrong: st.nWrong + (st.answer.includes(ltr) ? 0 : 1)
+    }));
+  }
+
+
+1
+this.state = {
+  todoList: {
+    day: '' // Monday, Tuesday, etc...
+    items: []
+  }
+}
+
+2
+onDaySelect(day) {
+  this.setState({
+    todoList: {
+      ...this.state.todoList,
+      day,
+      items: []
+    }
+  })
+}
+  */
