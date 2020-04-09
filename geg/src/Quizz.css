@@ -1,0 +1,28 @@
+body{
+    overflow: hidden;
+}
+.card{
+    top: -10px;
+    right: 0px;
+    position: absolute;
+    width: 300px;
+    height: 290px;
+    /* background-color: white; */
+    z-index: 9999;
+    color: white;
+    font-size: 16px;
+}
+
+.quizz{
+    /* color: black; */
+    z-index: 10001;
+    /* background-color: blue accent-2; */
+}
+                     
+.multiple-choice{
+    z-index: 10002;
+}
+
+.next{  
+    z-index: 10000;
+}

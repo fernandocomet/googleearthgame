@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Quizz from './Quizz';
+import './Bigphoto.css';
 
 class Bigphoto extends Component{
 
@@ -13,14 +13,14 @@ class Bigphoto extends Component{
     render(){
 
         //let imgPath = {this.props.imageChosen}
+        const path = "" + this.props.Bigphoto;
 
         return(
             <div className="fullImage">
                 
-                {/* <Image source={{uri : myImage, cache: 'reload'}} /> */}
-                <img width="300" src={this.props.imageChosen} alt={this.props.id} />
-                {/* <img src={this.props.imageChosen} alt={this.props.id} /> */}
-                {/* <img src={this.state.bigimage} alt={this.props.id} /> */}
+                <img src={this.props.imageChosen} alt={this.props.id} />
+                {/* <img width="300" height="300" src={this.props.imageChosen} alt={this.props.id} /> */}
+               
             </div>
         )
     }
