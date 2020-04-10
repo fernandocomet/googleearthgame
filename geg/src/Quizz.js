@@ -31,23 +31,24 @@ class Quizz extends Component{
           .then(response => response.json())
           .then(data => this.setState({ data }))
           .then(this.initialSet)
-          .then(this.randomizeItem)
-          //.then(console.log('data=' + this.state.data[0]))
-          //.then(this.state.countriesArr = this.state.data.values(countries))
-         
+          //.then(this.randomizeItem)
     }
 
     initialSet(){
           let countriesArr =[]; 
-          console.log("esto es = " + this.state.data.length);
+          // console.log("esto es = " + this.state.data.length);
           for(let i=0 ; i < this.state.data.length; i++){
               countriesArr.push(this.state.data[i].Country)
           }
           let countriesArrSet = new Set(countriesArr);
-          console.log(countriesArrSet);
+          // console.log(countriesArrSet);
+
+          let randomItem = Math.floor(Math.random()*this.state.data.length); 
+          let randomImage = this.state.data[randomItem].ImageURL;
 
           this.setState({
-              countries : countriesArrSet
+              countries : countriesArrSet,
+              imageChosen: randomImage,
           })
     }
 
@@ -57,35 +58,56 @@ class Quizz extends Component{
         const dataOK = data.filter(obj => !toDelete.has(obj.id));
 
         this.setState({data:dataOK})
-        console.log(this.state.data.length);
+        // console.log(this.state.data.length);
 
         //Random values Set countries
         let countriesArr = Array.from(this.state.countries);
         countriesArr = countriesArr.filter((item) => {return item !== this.state.countryChosen })
-
-        let random1 = Math.floor(Math.random()*countriesArr.length) +1;
-        let random2 = Math.floor(Math.random()*countriesArr.length) +1;
-        let random3 = Math.floor(Math.random()*countriesArr.length) +1;
+       
+        let random1 = Math.floor(Math.random()*countriesArr.length);
+        let random2 = Math.floor(Math.random()*countriesArr.length);
+        let random3 = Math.floor(Math.random()*countriesArr.length);
 
         countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random1]})
         countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random2]})
         countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random3]})
 
         let countriesQuizz4 =[];
-        countriesQuizz4.push(this.state.countryChosen, countriesArr[random1], countriesArr[random2], countriesArr[random3]);
+        let countryChosen = this.state.countryChosen;
+        countriesQuizz4.push(countryChosen) 
+        countriesQuizz4.push(countriesArr[random1])
+        countriesQuizz4.push(countriesArr[random2])
+        countriesQuizz4.push(countriesArr[random3]);
 
-        this.setState({ countriesQuizz: countriesQuizz4 })
+        //this.shuffleArray(countriesQuizz4);
         
+        this.setState({ 
+          countriesQuizz: countriesQuizz4 
+        })
+        
+        console.log('____________________________________________')
+        console.log('countryChosen = ' + this.state.countryChosen);
+        console.log('countriesQuizz = ' + this.state.countriesQuizz);
+        console.log('countriesQuizz4 = ' + countriesQuizz4);
           //Sort randomly countriesQuizz Array and Map them in a ul > li
 
-          //Events
-          //Button disable/Change
-          //Score
-          //Init and End Gaame
+          
+    }
+
+
+    shuffleArray(array){
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
     }
 
 
     randomizeItem(){
+      let data = this.state.data;
+      const toDelete = new Set(this.state.chosenItems);
+      const dataOK = data.filter(obj => !toDelete.has(obj.id));
+
         let theChosen = [...this.state.chosenItems];
 
         let randomItem = Math.floor(Math.random()*this.state.data.length); 
@@ -94,21 +116,67 @@ class Quizz extends Component{
         let randomId = this.state.data[randomItem].id;
 
         theChosen.push(randomId);
+
+        ////////////////////////////////////////////Adding
+
+        // this.setState({data:dataOK})
+        // console.log(this.state.data.length);
+
+        //Random values Set countries
+        let countriesArr = Array.from(this.state.countries);
+        countriesArr = countriesArr.filter((item) => {return item !== this.state.countryChosen })
+       
+        let random1 = Math.floor(Math.random()*countriesArr.length);
+        let random2 = Math.floor(Math.random()*countriesArr.length);
+        let random3 = Math.floor(Math.random()*countriesArr.length);
+
+        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random1]})
+        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random2]})
+        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random3]})
+
+        let countriesQuizz4 =[];
+        //console.log('this.state.countriesQuizz = ' + this.state.countriesQuizz);
+        const countriesQuizzNew = this.state.countriesQuizz;
+        console.log(countriesQuizzNew);
+
+        //let countryChosen = this.state.countryChosen;
+        countriesQuizz4.push(randomCountry) 
+        countriesQuizz4.push(countriesArr[random1])
+        countriesQuizz4.push(countriesArr[random2])
+        countriesQuizz4.push(countriesArr[random3]);
+
+        //this.shuffleArray(countriesQuizz4);
+        
+        // this.setState({ 
+        //   countriesQuizz: countriesQuizz4 
+        // })
+        
+        //////////////////////////////////////////////////
         
         this.setState({
-            itemChosen: randomItem,
-            imageChosen: randomImage,
-            countryChosen: randomCountry,
-            idChosen: randomId,
-            chosenItems: theChosen
+          countriesQuizz: countriesQuizz4, 
+          data:dataOK,
+          itemChosen: randomItem,
+          imageChosen: randomImage,
+          countryChosen: randomCountry,
+          idChosen: randomId,
+          chosenItems: theChosen
         });
-
-        this.makeQuizz();
+        
+        // console.log('____________________________________________')
+        // console.log('countryChosen = ' + this.state.countryChosen);
+        // console.log('countriesQuizz = ' + this.state.countriesQuizz);
+        // console.log('countriesQuizz4 = ' + countriesQuizz4);
+        //this.makeQuizz();
     }
 
     /*TO DO
     - onClick -> CheckCountry, Score
     - Button begin / next /playagain
+    //Events
+          //Button disable/Change
+          //Score
+          //Init and End Gaame
     */
 
 
