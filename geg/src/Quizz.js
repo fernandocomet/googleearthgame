@@ -12,7 +12,7 @@ class Quizz extends Component{
         {
             data:[],
             chosenItems:[],
-            countriesArr:[],
+            countriesQuizz:[],
             countries: new Set(),
             itemChosen : {Country:'', Region:'', ImageURL:'', GoogleMapsURL:'', id:''},
             imageChosen : "",
@@ -22,57 +22,79 @@ class Quizz extends Component{
             numPlays: 10 
         }
         this.randomizeItem = this.randomizeItem.bind(this);
+        this.initialSet = this.initialSet.bind(this);
+        this.makeQuizz = this.makeQuizz.bind(this);
     }
 
     componentDidMount() {
         fetch('https://raw.githubusercontent.com/fernandocomet/googleearthgame/master/geg/src/data/images.json')
           .then(response => response.json())
           .then(data => this.setState({ data }))
+          .then(this.initialSet)
           .then(this.randomizeItem)
           //.then(console.log('data=' + this.state.data[0]))
           //.then(this.state.countriesArr = this.state.data.values(countries))
          
     }
 
-    makeCountrySet(){
-        /*let countriesArr = [];
-        let datalength = this.state.data.length;
-        for(let i=0 ; i < datalength; i++){
-             //countriesArr.push(this.state.data[i].Country)
-        }*/
-        
-        //console.log(this.state.data);
-        
-        // this.state.data.forEach(([key, value]) => {
-        //     console.log(key); // 'one'
-        //     console.log(value); // 1
-        //   })
+    initialSet(){
+          let countriesArr =[]; 
+          console.log("esto es = " + this.state.data.length);
+          for(let i=0 ; i < this.state.data.length; i++){
+              countriesArr.push(this.state.data[i].Country)
+          }
+          let countriesArrSet = new Set(countriesArr);
+          console.log(countriesArrSet);
 
-        //Falkland Islands (Islas Malvinas)
+          this.setState({
+              countries : countriesArrSet
+          })
+    }
+
+    makeQuizz(){
+        let data = this.state.data;
+        const toDelete = new Set(this.state.chosenItems);
+        const dataOK = data.filter(obj => !toDelete.has(obj.id));
+
+        this.setState({data:dataOK})
+        console.log(this.state.data.length);
+
+        //Random values Set countries
+        let countriesArr = Array.from(this.state.countries);
+        countriesArr = countriesArr.filter((item) => {return item !== this.state.countryChosen })
+
+        let random1 = Math.floor(Math.random()*countriesArr.length) +1;
+        let random2 = Math.floor(Math.random()*countriesArr.length) +1;
+        let random3 = Math.floor(Math.random()*countriesArr.length) +1;
+
+        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random1]})
+        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random2]})
+        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random3]})
+
+        let countriesQuizz4 =[];
+        countriesQuizz4.push(this.state.countryChosen, countriesArr[random1], countriesArr[random2], countriesArr[random3]);
+
+        this.setState({ countriesQuizz: countriesQuizz4 })
+        
+          //Sort randomly countriesQuizz Array and Map them in a ul > li
+
+          //Events
+          //Button disable/Change
+          //Score
+          //Init and End Gaame
     }
 
 
     randomizeItem(){
-        console.log('RandomItem');
-        console.log(this.state.data.length)
-        let randomItem = Math.floor(Math.random()*this.state.data.length);
+        let theChosen = [...this.state.chosenItems];
+
+        let randomItem = Math.floor(Math.random()*this.state.data.length); 
         let randomImage = this.state.data[randomItem].ImageURL;
         let randomCountry = this.state.data[randomItem].Country;
-
-        let countriesArr =[]; //Should be done only at once
-        for(let i=0 ; i < this.state.data.length; i++){
-            countriesArr.push(this.state.data[i].Country)
-        }
-        console.log('countriesArr.length= ', countriesArr.length);
-        let countriesArrSet = new Set(countriesArr);
-        console.log(countriesArrSet);
-
         let randomId = this.state.data[randomItem].id;
-        let theChosen = [...this.state.chosenItems];
+
         theChosen.push(randomId);
         
-
-        console.log(`randomImage `, randomImage);
         this.setState({
             itemChosen: randomItem,
             imageChosen: randomImage,
@@ -81,24 +103,11 @@ class Quizz extends Component{
             chosenItems: theChosen
         });
 
+        this.makeQuizz();
     }
 
     /*TO DO
-    - Random item - Load initial photo default random
-    - Pass Random image
-    - Show random photo
-    - Push id to ChosenItems Array
-
-    - Push Countries to countries Set
-    - Select randomly three random items different from itemChosen country -> AQUI, 4 paises distintos, el chosen + 3 aleatorios countriesArr. 
-
-    - Show countries (4) randomly sorted: 3 random and the Chosen
-    (compare ids not to repeat a clue)
-
-    - Avoid repeated clues, duplicate data state array  or remove chosen from it
-
     - onClick -> CheckCountry, Score
-
     - Button begin / next /playagain
     */
 
