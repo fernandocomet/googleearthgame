@@ -23,7 +23,7 @@ class Quizz extends Component{
         }
         this.randomizeItem = this.randomizeItem.bind(this);
         this.initialSet = this.initialSet.bind(this);
-        this.makeQuizz = this.makeQuizz.bind(this);
+        // this.handleCheck = this.handleCheck.bind(this);
     }
 
     componentDidMount() {
@@ -52,47 +52,6 @@ class Quizz extends Component{
           })
     }
 
-    makeQuizz(){
-        let data = this.state.data;
-        const toDelete = new Set(this.state.chosenItems);
-        const dataOK = data.filter(obj => !toDelete.has(obj.id));
-
-        this.setState({data:dataOK})
-        // console.log(this.state.data.length);
-
-        //Random values Set countries
-        let countriesArr = Array.from(this.state.countries);
-        countriesArr = countriesArr.filter((item) => {return item !== this.state.countryChosen })
-       
-        let random1 = Math.floor(Math.random()*countriesArr.length);
-        let random2 = Math.floor(Math.random()*countriesArr.length);
-        let random3 = Math.floor(Math.random()*countriesArr.length);
-
-        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random1]})
-        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random2]})
-        countriesArr = countriesArr.filter((item) => { return item !== countriesArr[random3]})
-
-        let countriesQuizz4 =[];
-        let countryChosen = this.state.countryChosen;
-        countriesQuizz4.push(countryChosen) 
-        countriesQuizz4.push(countriesArr[random1])
-        countriesQuizz4.push(countriesArr[random2])
-        countriesQuizz4.push(countriesArr[random3]);
-
-        //this.shuffleArray(countriesQuizz4);
-        
-        this.setState({ 
-          countriesQuizz: countriesQuizz4 
-        })
-        
-        console.log('____________________________________________')
-        console.log('countryChosen = ' + this.state.countryChosen);
-        console.log('countriesQuizz = ' + this.state.countriesQuizz);
-        console.log('countriesQuizz4 = ' + countriesQuizz4);
-          //Sort randomly countriesQuizz Array and Map them in a ul > li
-
-          
-    }
 
 
     shuffleArray(array){
@@ -117,11 +76,6 @@ class Quizz extends Component{
 
         theChosen.push(randomId);
 
-        ////////////////////////////////////////////Adding
-
-        // this.setState({data:dataOK})
-        // console.log(this.state.data.length);
-
         //Random values Set countries
         let countriesArr = Array.from(this.state.countries);
         countriesArr = countriesArr.filter((item) => {return item !== this.state.countryChosen })
@@ -145,13 +99,7 @@ class Quizz extends Component{
         countriesQuizz4.push(countriesArr[random2])
         countriesQuizz4.push(countriesArr[random3]);
 
-        //this.shuffleArray(countriesQuizz4);
-        
-        // this.setState({ 
-        //   countriesQuizz: countriesQuizz4 
-        // })
-        
-        //////////////////////////////////////////////////
+        this.shuffleArray(countriesQuizz4);
         
         this.setState({
           countriesQuizz: countriesQuizz4, 
@@ -162,12 +110,7 @@ class Quizz extends Component{
           idChosen: randomId,
           chosenItems: theChosen
         });
-        
-        // console.log('____________________________________________')
-        // console.log('countryChosen = ' + this.state.countryChosen);
-        // console.log('countriesQuizz = ' + this.state.countriesQuizz);
-        // console.log('countriesQuizz4 = ' + countriesQuizz4);
-        //this.makeQuizz();
+
     }
 
     /*TO DO
@@ -177,7 +120,56 @@ class Quizz extends Component{
           //Button disable/Change
           //Score
           //Init and End Gaame
+
+      <li onClick={this.handleCheck.bind(this)} data-id="1"><span>A</span> <p>{this.props.answers[0]}</p></li>
+      <li onClick={this.handleCheck.bind(this)} data-id="2"><span>B</span> <p>{this.props.answers[1]}</p></li>
+      <li onClick={this.handleCheck.bind(this)} data-id="3"><span>C</span> <p>{this.props.answers[2]}</p></li>
+      <li onClick={this.handleCheck.bind(this)} data-id="4"><span>D</span> <p>{this.props.answers[3]}</p></li>
+
+      handleCheck(e) {
+        e.currentTarget.dataset.id 
+      }
     */
+
+    //  handleCheck(evt){
+    //       evt.preventDefault();
+    //       console.log("Click");
+    //       console.log("You clicked on " + evt.target.name);
+    //       //[evt.target.name]: evt.target.value
+    //       //e.currentTarget.dataset.id 
+    //  }
+
+    // handleCheck(idx, event) {
+    //       console.log(idx);
+    // }
+
+    handleChange(idx, event) {
+      // console.log("click");
+      // console.log(event.target);
+      // console.log(event.target.key);
+      // console.log(event.target.idx);
+      console.log(idx);
+
+      let answer = idx;
+      let correctAnswer;
+
+      for (let i=0 ; i<this.state.countriesQuizz.length; i++){
+          console.log(this.state.countriesQuizz[i] + " - " + i);
+          if(this.state.countryChosen === this.state.countriesQuizz[i]){
+            console.log("the correct anwer is " + i);
+            correctAnswer = i;
+          }
+      }
+
+      if(idx === correctAnswer){
+          console.log("OK!");
+      }else{
+          console.log("WRONG!");
+      }
+      // Search countryChosen in the Array, compare it to idx >> Styles
+      // const list = [].concat(this.state.someArray)
+      // list[index)[name] = value
+    }
 
 
     render(){
@@ -192,12 +184,15 @@ class Quizz extends Component{
                           <li key={idx}>{item.Country} {item.ImageURL} {item.id}</li>
                       ))}
                   </ul> */}
-                  <div className="collection multiple-choice">
-                      <a href="#!" className="collection-item">Alvin</a>
+                  <ul className="collection multiple-choice">
+                      {this.state.countriesQuizz.map((item, idx) => (
+                              <li className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</li>
+                          ))}
+                      {/* <a href="#!" className="collection-item">Alvin</a>
                       <a href="#!" className="collection-item active">Falkland Islands (Islas Malvinas)</a>
                       <a href="#!" className="collection-item">Alvin</a>
-                      <a href="#!" className="collection-item">Alvin</a>
-                  </div>
+                      <a href="#!" className="collection-item">Alvin</a> */}
+                  </ul>
                   <button className="waves-effect blue darken-2 btn next" onClick={this.randomizeItem}>NEXT CLUE</button>
               </div>    
               <Bigphoto imageChosen={this.state.imageChosen} key={this.state.idChosen}/>

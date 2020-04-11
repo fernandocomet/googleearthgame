@@ -6,8 +6,6 @@ import Quizz from './Quizz';
 function App() {
   return (
     <div className="App">
-      
-      <h1>Ouh yeah</h1>
       <Quizz />
     </div>
   );

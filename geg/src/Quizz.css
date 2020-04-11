@@ -26,3 +26,8 @@ body{
 .next{  
     z-index: 10000;
 }
+
+.liitem{
+    color: #2979ff;
+    cursor: pointer;
+}
