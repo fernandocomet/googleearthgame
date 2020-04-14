@@ -28,6 +28,10 @@ body{
     background-color: #1976d2 !important;
 }
 
+.again{
+    margin-top: 20px;
+}
+
 .btn{
     background-color: #1976d2 !important;
 }
@@ -36,4 +40,24 @@ body{
     color: #2979ff;
     cursor: pointer;
     width: 300px;
+}
+
+.introEnd{
+    margin-top: 50px;
+    height: 140px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.scoring{
+    display: flex;
+	flex-direction: row;
+	justify-content: center;
+    align-items: center;
+    bottom: 0px;
+    /* margin-top: 50px; */
+}
+
+.score{
+    margin-right: 30px;
 }

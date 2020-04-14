@@ -19,10 +19,13 @@ class Quizz extends Component{
             countryChosen : "",
             idChosen: "",
             score: 0,
-            numPlays: 10,
+            numPlays: 0,
             rolling: false,
             quizzing: false,
-            listyle: "collection-item liitem"
+            quizButton: "START", 
+            liClassName: 'collection-item liitem'
+            // liClassName: ['collection-item liitem', 'collection-item liitem teal accent-3', 'collection-item liitem red darken-1']
+            //neutral, right, wrong
         }
         this.randomizeItem = this.randomizeItem.bind(this);
         this.initialSet = this.initialSet.bind(this);
@@ -103,6 +106,11 @@ class Quizz extends Component{
         countriesQuizz4.push(countriesArr[random3]);
 
         this.shuffleArray(countriesQuizz4);
+
+        let numPlays = this.state.numPlays;
+        numPlays = numPlays +1;
+
+        let liStyle = 'collection-item liitem';
         
         this.setState({
           countriesQuizz: countriesQuizz4, 
@@ -114,7 +122,8 @@ class Quizz extends Component{
           chosenItems: theChosen,
           rolling : true,
           quizzing: false,
-          listyle: "collection-item liitem"
+          numPlays: numPlays,
+          liClassname: liStyle
         });
 
         
@@ -144,48 +153,72 @@ class Quizz extends Component{
           }
       }
 
+      let score = this.state.score;
+
       if(idx === correctAnswer){
           console.log("OK!");
-          event.target.className = 'collection-item liitem teal accent-3';
+          event.target.className = 'collection-item liitem teal accent-3'; 
+          //event.target.className = 'collection-item liitem teal accent-3';
+          score = score +1;
       }else{
           console.log("WRONG!");
           event.target.className = 'collection-item liitem red darken-1';
+          //event.target.className = 'collection-item liitem red darken-1';
           //Style correctAnswer TO DO
       }
 
+
       this.setState({
+        score: score,
         rolling: false,
-        quizzing: true
+        quizzing: true,
+        quizButton: "NEXT"
       })
     }
+
+    resetGame(){
+      console.log("Reset");
+    }
+
 
 
     render(){
 
-      // let title;
-      // if (this.state.rolling) {
-      //   title = <h1 className="collection-item liitem">Winning Hand</h1>;
-      // } 
-      // else {
-      //   title = <h1 className="Pokedex-loser">Losing Hand</h1>;
-      // }
+      // const styles = {
+      //   containerStyle: {
+      //     className: this.state.liClassName[0]
+      //   }
+      let containerStyle = this.state.liClassName[0];
 
-      // let listyle = {className: "collection-item liitem"}
+      let leftPlays = 10 - this.state.numPlays;
+      let introEnd;
 
-      
+      if(this.state.numPlays < 1){
+          introEnd = <h5 className="introEnd">Find out where the photo was taken. Select one of the four possible answers.</h5>
+      }else if(this.state.numPlays >= 10){
+          introEnd = 
+          <div className="introEnd">
+              <h5>You scored {this.state.score} out of {this.state.numPlays}</h5>
+              <button className="waves-effect blue darken-2 btn next again" onClick={this.resetGame} >PLAY AGAIN</button>
+          </div>
+      }else{
+          introEnd = 
+          <ul className="collection multiple-choice">
+                {this.state.countriesQuizz.map((item, idx) => (
+                      <button disabled={this.state.quizzing} className={this.state.liClassName} onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
+                ))}
+          </ul>
+      }
 
-        return(
+      return(
             <div>
               <div className="card blue accent-3">
-                  <h5 className="accent-3 quizz">GoogleEarth Quizz</h5>                   
-                  <ul className="collection multiple-choice">
-                      {this.state.countriesQuizz.map((item, idx) => (
-                              <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
-                      ))}
-                  </ul>
-                  <button className="waves-effect blue darken-2 btn next" onClick={this.randomizeItem} disabled={this.state.rolling}>
-                  {this.state.rolling ? "Click on the Answer" : "NEXT CLUE"}
-                  </button>
+                  <h5 className="accent-3 quizz">Google Earth Quiz</h5>     
+                  {introEnd}              
+                  <div className="scoring">
+                    <div className="score">{this.state.score}/{this.state.numPlays} - {leftPlays} left </div>
+                    <button className={"waves-effect blue darken-2 btn next"} onClick={this.randomizeItem} disabled={this.state.rolling}>{this.state.quizButton}</button>                    
+                  </div>
               </div>    
               <Bigphoto imageChosen={this.state.imageChosen} key={this.state.idChosen}/>
             </div>
@@ -195,13 +228,10 @@ class Quizz extends Component{
 
 export default Quizz;
 
-{/* <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button> */}
-
-// {"Country":"Australia","Region":"-","ImageURL":"www.gstatic.com/prettyearth/assets/full/1003.jpg","GoogleMapsURL":"www.google.com/maps/@-10.040181,143.560709,12z/data=!3m1!1e3","id":1003},
 /*
-                  {/* <ul>
-                      {this.state.data.map((item, idx) => (
-                          <li key={idx}>{item.Country} {item.ImageURL} {item.id}</li>
-                      ))}
-                  </ul> }
+liClassName
+ <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
+  <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
+
+ {/* {this.state.rolling ? "GUESS ANSWER" : "NEXT QUIZ"} }
 */
