@@ -25,9 +25,15 @@ body{
 
 .next{  
     z-index: 10000;
+    background-color: #1976d2 !important;
+}
+
+.btn{
+    background-color: #1976d2 !important;
 }
 
 .liitem{
     color: #2979ff;
     cursor: pointer;
+    width: 300px;
 }
