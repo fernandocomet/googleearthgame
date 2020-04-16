@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Bigphoto from './Bigphoto';
-//import PostData from './data/images.json';
-//import axios from "axios";
 import './Quizz.css';
 
 class Quizz extends Component{
@@ -23,13 +21,11 @@ class Quizz extends Component{
             rolling: false,
             quizzing: false,
             quizButton: "START", 
-            liClassName: 'collection-item liitem'
-            // liClassName: ['collection-item liitem', 'collection-item liitem teal accent-3', 'collection-item liitem red darken-1']
-            //neutral, right, wrong
+            itemStyle: '',
+            clickedStyle: '',
         }
         this.randomizeItem = this.randomizeItem.bind(this);
         this.initialSet = this.initialSet.bind(this);
-        // this.handleCheck = this.handleCheck.bind(this);
     }
 
     componentDidMount() {
@@ -37,18 +33,18 @@ class Quizz extends Component{
           .then(response => response.json())
           .then(data => this.setState({ data }))
           .then(this.initialSet)
-          //.then(this.randomizeItem)
+
+        this.setState({
+          itemStyle: 'neutral'
+        })  
     }
 
     initialSet(){
           let countriesArr =[]; 
-          // console.log("esto es = " + this.state.data.length);
           for(let i=0 ; i < this.state.data.length; i++){
               countriesArr.push(this.state.data[i].Country)
           }
           let countriesArrSet = new Set(countriesArr);
-          // console.log(countriesArrSet);
-
           let randomItem = Math.floor(Math.random()*this.state.data.length); 
           let randomImage = this.state.data[randomItem].ImageURL;
 
@@ -57,8 +53,6 @@ class Quizz extends Component{
               imageChosen: randomImage,
           })
     }
-
-
 
     shuffleArray(array){
         for (let i = array.length - 1; i > 0; i--) {
@@ -69,9 +63,9 @@ class Quizz extends Component{
 
 
     randomizeItem(){
-      let data = this.state.data;
-      const toDelete = new Set(this.state.chosenItems);
-      const dataOK = data.filter(obj => !toDelete.has(obj.id));
+        let data = this.state.data;
+        const toDelete = new Set(this.state.chosenItems);
+        const dataOK = data.filter(obj => !toDelete.has(obj.id));
 
         let theChosen = [...this.state.chosenItems];
 
@@ -110,7 +104,7 @@ class Quizz extends Component{
         let numPlays = this.state.numPlays;
         numPlays = numPlays +1;
 
-        let liStyle = 'collection-item liitem';
+        let newItemStyle = 'neutral';
         
         this.setState({
           countriesQuizz: countriesQuizz4, 
@@ -123,46 +117,43 @@ class Quizz extends Component{
           rolling : true,
           quizzing: false,
           numPlays: numPlays,
-          liClassname: liStyle
+          itemStyle: newItemStyle,
+          clickedStyle: newItemStyle 
         });
-
-        
-        //className="collection-item liitem"
-        //event.target.className = 'collection-item liitem red darken-1';
-
     }
 
-    /*TO DO
-    - onClick -> CheckCountry, Score
-    - Button begin / next /playagain
-    //Events
-          //Score
-          //Init and End Gaame
-    */
+    // TO DO
+    // Init and End Gaame
+  
 
     handleChange(idx, event) {
-
       console.log(idx);
       let correctAnswer;
 
       for (let i=0 ; i<this.state.countriesQuizz.length; i++){
           console.log(this.state.countriesQuizz[i] + " - " + i);
           if(this.state.countryChosen === this.state.countriesQuizz[i]){
-            console.log("the correct anwer is " + i);
+            console.log("the correct answer is " + i);
             correctAnswer = i;
           }
       }
 
       let score = this.state.score;
+      let clickedStyleRight = 'right';
+      let clickedStyleWrong = 'wrong';
 
       if(idx === correctAnswer){
           console.log("OK!");
-          event.target.className = 'collection-item liitem teal accent-3'; 
+          this.setState({clickedStyle: clickedStyleRight })
+          event.target.className = this.state.clickedStyle;
+          //event.target.className = 'right'; 
           //event.target.className = 'collection-item liitem teal accent-3';
           score = score +1;
       }else{
           console.log("WRONG!");
-          event.target.className = 'collection-item liitem red darken-1';
+          this.setState({clickedStyle: clickedStyleWrong })
+          event.target.className = this.state.clickedStyle;
+          //event.target.className = 'wrong';
           //event.target.className = 'collection-item liitem red darken-1';
           //Style correctAnswer TO DO
       }
@@ -173,6 +164,7 @@ class Quizz extends Component{
         rolling: false,
         quizzing: true,
         quizButton: "NEXT"
+        //itemStyle: newItemStyle
       })
     }
 
@@ -183,14 +175,7 @@ class Quizz extends Component{
 
 
     render(){
-
-      // const styles = {
-      //   containerStyle: {
-      //     className: this.state.liClassName[0]
-      //   }
-      let containerStyle = this.state.liClassName[0];
-
-      let leftPlays = 10 - this.state.numPlays;
+      let leftPlays = 10 - this.state.numPlays;  //TO DO change 10 for variable
       let introEnd;
 
       if(this.state.numPlays < 1){
@@ -203,11 +188,11 @@ class Quizz extends Component{
           </div>
       }else{
           introEnd = 
-          <ul className="collection multiple-choice">
+          <div>
                 {this.state.countriesQuizz.map((item, idx) => (
-                      <button disabled={this.state.quizzing} className={this.state.liClassName} onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
+                      <button disabled={this.state.quizzing} className={this.state.itemStyle} onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
                 ))}
-          </ul>
+          </div>
       }
 
       return(
@@ -229,7 +214,15 @@ class Quizz extends Component{
 export default Quizz;
 
 /*
-liClassName
+{"Country":"Australia","Region":"-","ImageURL":"https://www.gstatic.com/prettyearth/assets/full/1003.jpg","GoogleMapsURL":"https://www.google.com/maps/@-10.040181,143.560709,12z/data=!3m1!1e3","id":1003},
+<button className={"waves-effect blue darken-2 btn next"} onClick={this.randomizeItem} disabled={this.state.rolling}>{this.state.quizButton}</button>             
+itemStyle
+<ul className="collection multiple-choice">
+                {this.state.countriesQuizz.map((item, idx) => (
+                      <button disabled={this.state.quizzing} className={this.state.itemStyle} onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
+                ))}
+          </ul>
+
  <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
   <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
 

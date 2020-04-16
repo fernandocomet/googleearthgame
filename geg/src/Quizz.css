@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 body{
     overflow: hidden;
+    font-family: 'Roboto', sans-serif;
 }
 .card{
     top: -10px;
@@ -60,4 +63,63 @@ body{
 
 .score{
     margin-right: 30px;
+}
+
+/* collection-item liitem */
+
+.disabledContent{
+    display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+    align-items: center;
+
+    width: 300px;
+    padding: 10px;
+    color: #2979ff;
+    font-size: 18px;
+
+    cursor: not-allowed;
+    pointer-events:none;
+}
+
+
+.neutral{
+    display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+    align-items: center;
+    
+    width: 300px;
+    padding: 10px;
+    color: #2979ff;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.right{
+    display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+    align-items: center;
+    
+    width: 300px;
+    padding: 10px;
+    color: green;
+    font-size: 18px;
+}
+
+.wrong{
+    display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+    align-items: center;
+    
+    width: 300px;
+    padding: 10px;
+    color: red;
+    font-size: 18px;
+}
+
+.opacityStyle{
+    opacity: 0;
 }
