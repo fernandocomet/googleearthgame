@@ -50,6 +50,7 @@ body{
     height: 140px;
     margin-left: 20px;
     margin-right: 20px;
+    margin-bottom: 10px;
 }
 
 .scoring{
@@ -58,11 +59,12 @@ body{
 	justify-content: center;
     align-items: center;
     bottom: 0px;
-    /* margin-top: 50px; */
+    /* margin-top: 10px;  */
 }
 
 .score{
     margin-right: 30px;
+    font-size: 20px;
 }
 
 /* collection-item liitem */
@@ -92,7 +94,7 @@ body{
     width: 300px;
     padding: 10px;
     color: #2979ff;
-    font-size: 18px;
+    font-size: 17px;
     cursor: pointer;
 }
 
