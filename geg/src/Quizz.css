@@ -125,3 +125,14 @@ body{
 .opacityStyle{
     opacity: 0;
 }
+
+.infoLayer{
+    position: absolute;
+    background-color: #2979ff;
+    top: 0px;
+    left: 0px;
+    font-size: 24px;
+    color: white;
+    z-index: 10005;
+    padding: 20px;
+}

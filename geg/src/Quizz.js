@@ -5,7 +5,7 @@ import './Quizz.css';
 class Quizz extends Component{
 
     static defaultProps = {
-      totalPlays: 20
+      totalPlays: 5
     } 
 
     constructor(props){
@@ -25,7 +25,8 @@ class Quizz extends Component{
             rolling: false,
             quizzing: false,
             gamestarted: false,
-            quizButton: "START"
+            quizButton: "START",
+            layerinfo: ""
         }
         this.randomizeItem = this.randomizeItem.bind(this);
         this.initialSet = this.initialSet.bind(this);
@@ -49,7 +50,13 @@ class Quizz extends Component{
           let randomImage = this.state.data[randomItem].ImageURL;
           let plays = 0;
 
+          let randomCountry = this.state.data[randomItem].Country;
+          let region = this.state.data[randomItem].Region;
+            if(region === "-"){region = 'unknown'}
+          let layerinfoquiz = randomCountry + ', region ' + region;
+
           this.setState({
+              layerinfo: layerinfoquiz,
               countries : countriesArrSet,
               imageChosen: randomImage,
               numPlays: plays
@@ -78,6 +85,7 @@ class Quizz extends Component{
         let region = this.state.data[randomItem].Region;
         if(region === "-"){region = 'unknown'}
         console.log(randomCountry + ', region ' + region)
+        let layerinfoquiz = randomCountry + ', region ' + region;
 
         //itemChosen : {Country:'', Region:'', ImageURL:'', GoogleMapsURL:'', id:''},
 
@@ -108,8 +116,8 @@ class Quizz extends Component{
 
         this.shuffleArray(countriesQuizz4);
 
-        
         this.setState({
+          layerinfo: layerinfoquiz,
           countriesQuizz: countriesQuizz4, 
           data:dataOK,
           itemChosen: randomItem,
@@ -125,7 +133,6 @@ class Quizz extends Component{
 
     // TO DO
     // Preload  https://commons.wikimedia.org/wiki/Category:Google_SVG_logos   https://thenounproject.com/term/camera/3267485/ Created by Vincencio from the Noun Project
-    // Layer place, aciertos/score
     // Mobile
     // Twit
 
@@ -144,12 +151,15 @@ class Quizz extends Component{
       }
 
       let score = this.state.score;
+      let answerResult;
 
       if(idx === correctAnswer){
           //console.log("OK!");
           //event.target.className = 'collection-item liitem teal accent-3';
           score = score +1;
+          answerResult = '✔ ' + this.state.layerinfo;
       }else{
+          answerResult = '✗ ' + this.state.layerinfo;
           //console.log("WRONG!");
           //event.target.className = 'collection-item liitem red darken-1';
       }
@@ -161,6 +171,7 @@ class Quizz extends Component{
       else{this.setState({ rolling: false })}
 
       this.setState({
+        layerinfo: answerResult,
         score: score,
         quizzing: true,
         quizButton: "NEXT",
@@ -169,7 +180,9 @@ class Quizz extends Component{
     }
 
     resetGame(){
-      //console.log("Reset");
+      //console.log("(Reset");
+      this.initialSet();
+    
       let theChosenReset = [];
       let numPlaysReset = 0;
 
@@ -186,6 +199,7 @@ class Quizz extends Component{
     render(){
       let leftPlays = this.props.totalPlays - this.state.numPlays; 
       let introEnd;
+      let infoLayer;
 
       if(this.state.gamestarted === false){           
           introEnd = <h5 className="introEnd">Find out where the photo was taken. Select one of the four possible answers.</h5>
@@ -206,8 +220,17 @@ class Quizz extends Component{
         }
       }
 
+      if(this.state.rolling === false){
+          infoLayer =  <div className='infoLayer'>{this.state.layerinfo}</div>
+      }
+      if(this.state.numPlays === this.props.totalPlays){
+        infoLayer =  <div className='infoLayer'>{this.state.layerinfo}</div>
+      }
+
+      
       return(
             <div>
+              {infoLayer}
               <div className="card blue accent-3">
                   <h5 className="accent-3 quizz">Google Earth Quiz</h5>     
                   {introEnd}              
@@ -223,24 +246,3 @@ class Quizz extends Component{
 }
 
 export default Quizz;
-
-/*
-          <div>
-                {this.state.countriesQuizz.map((item, idx) => (
-                      <button disabled={this.state.quizzing} className={this.state.itemStyle} onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
-                ))}
-          </div>
-{"Country":"Australia","Region":"-","ImageURL":"https://www.gstatic.com/prettyearth/assets/full/1003.jpg","GoogleMapsURL":"https://www.google.com/maps/@-10.040181,143.560709,12z/data=!3m1!1e3","id":1003},
-<button className={"waves-effect blue darken-2 btn next"} onClick={this.randomizeItem} disabled={this.state.rolling}>{this.state.quizButton}</button>             
-itemStyle
-<ul className="collection multiple-choice">
-                {this.state.countriesQuizz.map((item, idx) => (
-                      <button disabled={this.state.quizzing} className={this.state.itemStyle} onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
-                ))}
-          </ul>
-
- <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
-  <button disabled={this.state.quizzing} className="collection-item liitem" onClick={this.handleChange.bind(this, idx)} key={idx}>{item}</button>
-
- {/* {this.state.rolling ? "GUESS ANSWER" : "NEXT QUIZ"} }
-*/
