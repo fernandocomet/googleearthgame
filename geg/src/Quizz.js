@@ -12,6 +12,7 @@ class Quizz extends Component{
         super(props);
         this.state = 
         {
+            isLoaded: false,
             data:[],
             chosenItems:[],
             countriesQuizz:[],
@@ -34,6 +35,7 @@ class Quizz extends Component{
     }
 
     componentDidMount() {
+      setTimeout(function(){this.setState({isLoaded :true})}.bind(this),3000);
         fetch('https://raw.githubusercontent.com/fernandocomet/googleearthgame/master/geg/src/data/images.json')
           .then(response => response.json())
           .then(data => this.setState({ data }))
@@ -200,6 +202,13 @@ class Quizz extends Component{
       let leftPlays = this.props.totalPlays - this.state.numPlays; 
       let introEnd;
       let infoLayer;
+      let loader;
+
+      if(this.state.isLoaded === false){
+        loader = <div className="scale-up-center">
+                  <div><img src="https://www.fernandocomet.com/geg/cam.png" alt="Google Earth Game" /></div>
+                </div>
+      }//Meter el else
 
       if(this.state.gamestarted === false){           
           introEnd = <h5 className="introEnd">Find out where the photo was taken. Select one of the four possible answers.</h5>
@@ -230,6 +239,7 @@ class Quizz extends Component{
       
       return(
             <div>
+              {loader}
               {infoLayer}
               <div className="card blue accent-3">
                   <h5 className="accent-3 quizz">Google Earth Quiz</h5>     
