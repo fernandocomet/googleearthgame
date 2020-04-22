@@ -5,7 +5,7 @@ import './Quizz.css';
 class Quizz extends Component{
 
     static defaultProps = {
-      totalPlays: 5
+      totalPlays: 20
     } 
 
     constructor(props){
@@ -86,14 +86,10 @@ class Quizz extends Component{
         let randomId = this.state.data[randomItem].id;
         let region = this.state.data[randomItem].Region;
         if(region === "-"){region = 'unknown'}
-        console.log(randomCountry + ', region ' + region)
         let layerinfoquiz = randomCountry + ', region ' + region;
-
-        //itemChosen : {Country:'', Region:'', ImageURL:'', GoogleMapsURL:'', id:''},
 
         theChosen.push(randomId);
 
-        //Random values Set countries
         let countriesArr = Array.from(this.state.countries);
 
         countriesArr = countriesArr.filter((item) => {return item !== this.state.countryChosen })
@@ -134,20 +130,15 @@ class Quizz extends Component{
     }
 
     // TO DO
-    // Preload  https://commons.wikimedia.org/wiki/Category:Google_SVG_logos   https://thenounproject.com/term/camera/3267485/ Created by Vincencio from the Noun Project
-    // Mobile
     // Twit
 
   
 
     handleChange(idx, event) {
-      //console.log(idx);
       let correctAnswer;
 
       for (let i=0 ; i<this.state.countriesQuizz.length; i++){
-          //console.log(this.state.countriesQuizz[i] + " - " + i);
           if(this.state.countryChosen === this.state.countriesQuizz[i]){
-            //console.log("the correct answer is " + i);
             correctAnswer = i;
           }
       }
@@ -182,7 +173,6 @@ class Quizz extends Component{
     }
 
     resetGame(){
-      //console.log("(Reset");
       this.initialSet();
     
       let theChosenReset = [];
@@ -208,7 +198,7 @@ class Quizz extends Component{
         loader = <div className="scale-up-center">
                   <div><img src="https://www.fernandocomet.com/geg/cam.png" alt="Google Earth Game" /></div>
                 </div>
-      }//Meter el else
+      }
 
       if(this.state.gamestarted === false){           
           introEnd = <h5 className="introEnd">Find out where the photo was taken. Select one of the four possible answers.</h5>

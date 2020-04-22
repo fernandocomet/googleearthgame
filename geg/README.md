@@ -1,4 +1,11 @@
+# Google Earth Game
+A Game Quiz created and developed by @fernandocomet 
+It takes nice photo views from the Earth and challenges the User to discover the country shown. 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The web Quiz App takes photos from [Google Earth](https://www.google.com/earth/) parsing a JSON and challenging User to discover the country shown. 
+For the UI I used [MaterializeCSS](https://materializecss.com/) 
+Preload logos are loaned by [Wikimedia](https://commons.wikimedia.org/wiki/Category:Google_SVG_logos) and [TheNounProject](https://thenounproject.com/term/camera/3267485/) 
 
 ## Available Scripts
 
@@ -66,3 +73,4 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
