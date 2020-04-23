@@ -1,6 +1,9 @@
 # Google Earth Game
 A Game Quiz created and developed by @fernandocomet 
 It takes nice photo views from the Earth and challenges the User to discover the country shown. 
+[Thanks to Netlify you can see the online project here](https://googleearthquiz.netlify.app/)
+
+![Google Earth Quiz](https://www.fernandocomet.com/geg/googleearthquiz.jpeg)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 The web Quiz App takes photos from [Google Earth](https://www.google.com/earth/) parsing a JSON and challenging User to discover the country shown. 
